@@ -3,12 +3,14 @@ package com.ciwen.bloom;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import com.ciwen.bloom.bitset.CustomBitSet;
 import java.util.BitSet;
 import java.util.List;
 
 /*实现 BloomFilter 接口的具体类*/
 public class SimpleBloomFilter<T> implements BloomFilter<T> {
-    private final BitSet bitSet;
+    //private final BitSet bitSet;
+    private final CustomBitSet bitSet;
     private final int size;
     private final int numHashFunctions;
     private int count;
@@ -22,7 +24,8 @@ public class SimpleBloomFilter<T> implements BloomFilter<T> {
     public SimpleBloomFilter(int expectedElements, double falsePositiveRate) {
         this.size = optimalSize(expectedElements, falsePositiveRate);
         this.numHashFunctions = optimalHashFunctions(expectedElements, size);
-        this.bitSet = new BitSet(size);
+        this.bitSet = new CustomBitSet(size);
+        //this.bitSet = new BitSet(size);
         this.count = 0;
 
         // 初始化哈希函数列表
