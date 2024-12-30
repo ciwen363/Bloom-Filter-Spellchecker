@@ -1,5 +1,6 @@
 package com.ciwen.bloom;
 
+//MurmurHash特点是速度快、冲突率低
 public class MurmurHash<T> implements HashFunction<T> {
     private static final int SEED = 0x9747b28c;
 
