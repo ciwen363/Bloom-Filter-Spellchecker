@@ -78,4 +78,27 @@ public class BloomFilterTest {
         log.info("布隆过滤器的大小: {}", size);
         assertTrue(size > 0);
     }
+
+    @Test
+    public void testFalsePositiveRate() {
+        log.info("执行 testFalsePositiveRate 测试...");
+        // 添加足够多的元素以测试误判率
+        for (int i = 0; i < EXPECTED_ELEMENTS; i++) {
+            bloomFilter.add("item" + i);
+        }
+
+        int falsePositives = 0;
+        int testCount = 1000;
+
+        // 测试不存在的元素
+        for (int i = 0; i < testCount; i++) {
+            if (bloomFilter.mightContain("nonexistent" + i)) {
+                falsePositives++;
+            }
+        }
+
+        double actualFalsePositiveRate = (double) falsePositives / testCount;
+        log.info("实际误判率: {}, 预期误判率: {}", actualFalsePositiveRate, FALSE_POSITIVE_RATE);
+        assertTrue(actualFalsePositiveRate <= FALSE_POSITIVE_RATE * 2); // 允许一定误差
+    }
 }
