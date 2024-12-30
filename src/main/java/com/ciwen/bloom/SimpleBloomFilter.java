@@ -1,14 +1,16 @@
 package com.ciwen.bloom;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
 /*实现 BloomFilter 接口的具体类*/
 public class SimpleBloomFilter<T> implements BloomFilter<T> {
-    private BitSet bitSet;
-    private int size;
-    private int numHashFunctions;
+    private final BitSet bitSet;
+    private final int size;
+    private final int numHashFunctions;
     private int count;
     private final List<HashFunction<T>> hashFunctions;
 
@@ -25,14 +27,14 @@ public class SimpleBloomFilter<T> implements BloomFilter<T> {
 
         // 初始化哈希函数列表
         this.hashFunctions = new ArrayList<>();
-        hashFunctions.add(new MurmurHash<T>());
-        hashFunctions.add(new FNVHash<T>());
-        hashFunctions.add(new DJBHash<T>());
-        hashFunctions.add(new JenkinsHash<T>());
+        hashFunctions.add(new MurmurHash<>());
+        hashFunctions.add(new FNVHash<>());
+        hashFunctions.add(new DJBHash<>());
+        hashFunctions.add(new JenkinsHash<>());
     }
 
     @Override
-    public void add(T item) {
+    public void add(@NotNull T item) {
         if (item == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
@@ -44,7 +46,7 @@ public class SimpleBloomFilter<T> implements BloomFilter<T> {
     }
 
     @Override
-    public boolean mightContain(T item) {
+    public boolean mightContain(@NotNull T item) {
         if (item == null) {
             return false;
         }
