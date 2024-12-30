@@ -1,6 +1,8 @@
 package com.ciwen.gui;
 
 import com.ciwen.checker.KeywordChecker;
+import com.ciwen.gui.config.StyleConfig;
+import com.ciwen.gui.config.ThemeConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -14,115 +16,255 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * JavaFX主控制器类
+ * 负责处理用户界面交互和显示逻辑
+ */
 public class MainController implements Initializable {
+    // FXML注入的UI组件
     @FXML private TextArea codeArea;
     @FXML private WebView resultView;
+    @FXML private ComboBox<ThemeConfig.ThemeName> themeComboBox;
+    @FXML private ComboBox<StyleConfig.FontFamily> fontFamilyComboBox;
+    @FXML private ComboBox<Integer> fontSizeComboBox;
+    @FXML private CheckBox keywordBoldCheckBox;
+    @FXML private CheckBox errorBoldCheckBox;
     @FXML private CheckBox includeCppKeywordsCheckbox;
     @FXML private Label statisticsLabel;
     @FXML private Button resetStatsButton;
     @FXML private Button clearTextButton;
-    @FXML private ToggleButton darkModeToggle;
 
+    // 业务逻辑组件
     private KeywordChecker checker;
+    private ThemeConfig currentTheme;
+    private StyleConfig currentStyle;
+
+    // 属性
     private final SimpleStringProperty statusText = new SimpleStringProperty("");
     private final SimpleDoubleProperty falsePositiveRate = new SimpleDoubleProperty(0.01);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // 初始化检查器
         checker = new KeywordChecker(falsePositiveRate.get(), true);
 
         // 初始化UI组件
-        setupUIComponents();
+        initializeComponents();
+
+        // 初始化主题和样式
+        initializeThemeAndStyle();
 
         // 设置事件处理器
         setupEventHandlers();
 
-        // 初始化统计信息显示
+        // 初始化统计信息
         updateStatistics();
     }
 
-    private void setupUIComponents() {
-        includeCppKeywordsCheckbox.setSelected(true);
-        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");
+    /**
+     * 初始化UI组件
+     */
+    private void initializeComponents() {
+        // 配置统计标签
         statisticsLabel.textProperty().bind(statusText);
+
+        // 设置C++关键字选项默认值
+        includeCppKeywordsCheckbox.setSelected(true);
+
+        // 设置代码区域初始样式
+        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");
     }
 
+    /**
+     * 初始化主题和样式配置
+     */
+    private void initializeThemeAndStyle() {
+        // 设置主题选项
+        themeComboBox.getItems().addAll(ThemeConfig.ThemeName.values());
+        themeComboBox.setValue(ThemeConfig.ThemeName.LIGHT);
+
+        // 设置字体选项
+        fontFamilyComboBox.getItems().addAll(StyleConfig.FontFamily.values());
+        fontFamilyComboBox.setValue(StyleConfig.FontFamily.COURIER_NEW);
+
+        // 设置字体大小选项
+        fontSizeComboBox.getItems().addAll(12, 14, 16, 18, 20, 22, 24);
+        fontSizeComboBox.setValue(14);
+
+        // 设置默认粗体选项
+        keywordBoldCheckBox.setSelected(true);
+        errorBoldCheckBox.setSelected(false);
+
+        // 初始化配置对象
+        currentTheme = ThemeConfig.createTheme(ThemeConfig.ThemeName.LIGHT);
+        currentStyle = StyleConfig.createDefault();
+    }
+
+    /**
+     * 设置事件处理器
+     */
     private void setupEventHandlers() {
+        // 代码区域变化监听
         codeArea.addEventHandler(KeyEvent.KEY_RELEASED, event -> updateHighlighting());
 
+        // 主题切换监听
+        themeComboBox.setOnAction(event -> {
+            currentTheme = ThemeConfig.createTheme(themeComboBox.getValue());
+            updateDisplay();
+        });
+
+        // 字体设置监听
+        fontFamilyComboBox.setOnAction(event -> {
+            currentStyle.setFontFamily(fontFamilyComboBox.getValue().toString());
+            updateDisplay();
+        });
+
+        // 字体大小监听
+        fontSizeComboBox.setOnAction(event -> {
+            currentStyle.setFontSize(fontSizeComboBox.getValue());
+            updateDisplay();
+        });
+
+        // 粗体设置监听
+        keywordBoldCheckBox.setOnAction(event -> {
+            currentStyle.setKeywordBold(keywordBoldCheckBox.isSelected());
+            updateDisplay();
+        });
+
+        errorBoldCheckBox.setOnAction(event -> {
+            currentStyle.setErrorBold(errorBoldCheckBox.isSelected());
+            updateDisplay();
+        });
+
+        // C++关键字包含选项监听
         includeCppKeywordsCheckbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
             checker.updateKeywords(newVal);
             updateHighlighting();
             updateStatistics();
         });
 
+        // 重置统计按钮
         resetStatsButton.setOnAction(event -> {
             checker.resetStats();
             updateStatistics();
         });
 
+        // 清除文本按钮
         clearTextButton.setOnAction(event -> {
             codeArea.clear();
             updateHighlighting();
         });
-
-        darkModeToggle.selectedProperty().addListener((obs, oldVal, newVal) ->
-                updateTheme(newVal));
     }
 
+    /**
+     * 更新显示效果
+     */
+    private void updateDisplay() {
+        updateCodeAreaStyle();
+        updateHighlighting();
+    }
+
+    /**
+     * 更新代码区域样式
+     */
+    private void updateCodeAreaStyle() {
+        String style = String.format(
+                "-fx-font-family: '%s'; " +
+                        "-fx-font-size: %dpx; " +
+                        "-fx-background-color: %s; " +
+                        "-fx-text-fill: %s;",
+                currentStyle.getFontFamily(),
+                currentStyle.getFontSize(),
+                ThemeConfig.toRGBA(currentTheme.getBackgroundColor()),
+                ThemeConfig.toRGBA(currentTheme.getTextColor())
+        );
+        codeArea.setStyle(style);
+    }
+
+    /**
+     * 更新高亮显示
+     */
     private void updateHighlighting() {
         String text = codeArea.getText();
-        StringBuilder html = new StringBuilder(
-                "<html><body style='font-family: Courier New; font-size: 14px; margin: 10px;'>");
+        StringBuilder html = new StringBuilder();
 
+        // 设置HTML文档样式
+        html.append(String.format("""
+            <html><head><style>
+            body {
+                font-family: %s;
+                font-size: %dpx;
+                background-color: %s;
+                color: %s;
+                margin: 10px;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+            .keyword {
+                color: %s;
+                font-weight: %s;
+            }
+            .error {
+                color: %s;
+                font-weight: %s;
+            }
+            </style></head><body>
+            """,
+                currentStyle.getFontFamily(),
+                currentStyle.getFontSize(),
+                ThemeConfig.toRGBA(currentTheme.getBackgroundColor()),
+                ThemeConfig.toRGBA(currentTheme.getTextColor()),
+                ThemeConfig.toRGBA(currentTheme.getKeywordColor()),
+                currentStyle.isKeywordBold() ? "bold" : "normal",
+                ThemeConfig.toRGBA(currentTheme.getErrorColor()),
+                currentStyle.isErrorBold() ? "bold" : "normal"
+        ));
+
+        // 处理文本内容
         Pattern wordPattern = Pattern.compile("\\b\\w+\\b");
         Matcher matcher = wordPattern.matcher(text);
-
         int lastIndex = 0;
+
         while (matcher.find()) {
-            String word = matcher.group();
+            // 添加匹配词之前的文本
             html.append(escapeHtml(text.substring(lastIndex, matcher.start())));
 
+            String word = matcher.group();
             if (checker.isKeyword(word)) {
-                html.append("<span style='color: #0066cc; font-weight: bold;'>")
+                // 关键字高亮
+                html.append("<span class='keyword'>")
                         .append(escapeHtml(word))
                         .append("</span>");
             } else if (!word.matches("\\d+") && !isCommonWord(word)) {
-                // 非关键字且不是数字和常用词的单词标为红色
-                html.append("<span style='color: #cc0000;'>")
+                // 可能的错误单词高亮
+                html.append("<span class='error'>")
                         .append(escapeHtml(word))
                         .append("</span>");
             } else {
+                // 普通文本
                 html.append(escapeHtml(word));
             }
 
             lastIndex = matcher.end();
         }
 
+        // 添加剩余文本
         html.append(escapeHtml(text.substring(lastIndex)));
         html.append("</body></html>");
 
+        // 更新WebView内容
         resultView.getEngine().loadContent(html.toString());
+
+        // 更新统计信息
         updateStatistics();
     }
 
-    private boolean isCommonWord(String word) {
-        // 添加一些常用词或标识符，避免全部标红
-        return word.length() <= 2 || word.matches("^[ijk]$") ||
-                word.matches("^(tmp|str|num|val|var|ptr)\\d*$");
-    }
-
-    private String escapeHtml(String text) {
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\n", "<br>")
-                .replace(" ", "&nbsp;");
-    }
-
+    /**
+     * 更新统计信息
+     */
     private void updateStatistics() {
         String stats = String.format(
-                "Total Checks: %d | False Positives: %d | FP Rate: %.2f%% | Keywords: %d",
+                "总检查: %d | 误判: %d | 误判率: %.2f%% | 关键字数: %d",
                 checker.getTotalChecks(),
                 checker.getFalsePositives(),
                 checker.getActualFalsePositiveRate() * 100,
@@ -131,28 +273,24 @@ public class MainController implements Initializable {
         statusText.set(stats);
     }
 
-    private void updateTheme(boolean isDark) {
-        String theme = isDark ? "dark" : "light";
-        String baseStyle = String.format(
-                "body { background-color: %s; color: %s; }",
-                isDark ? "#1e1e1e" : "#ffffff",
-                isDark ? "#d4d4d4" : "#000000"
-        );
+    /**
+     * 检查是否为常用词
+     */
+    private boolean isCommonWord(String word) {
+        return word.length() <= 2 ||
+                word.matches("^[ijk]$") ||
+                word.matches("^(tmp|str|num|val|var|ptr)\\d*$");
+    }
 
-        resultView.getEngine().setUserStyleSheetLocation(
-                String.format("data:text/css;charset=utf-8," +
-                                "body{background:%s;color:%s}",
-                        isDark ? "#1e1e1e" : "#ffffff",
-                        isDark ? "#d4d4d4" : "#000000")
-        );
-
-        codeArea.setStyle(String.format(
-                "-fx-font-family: 'Courier New'; " +
-                        "-fx-font-size: 14px; " +
-                        "-fx-background-color: %s; " +
-                        "-fx-text-fill: %s;",
-                isDark ? "#1e1e1e" : "#ffffff",
-                isDark ? "#d4d4d4" : "#000000"
-        ));
+    /**
+     * HTML特殊字符转义
+     */
+    private String escapeHtml(String text) {
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\n", "<br>")
+                .replace(" ", "&nbsp;")
+                .replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     }
 }
