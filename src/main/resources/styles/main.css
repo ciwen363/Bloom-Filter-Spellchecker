@@ -1,0 +1,102 @@
+/* 基础样式 */
+.main-container {
+    -fx-background-color: #f4f4f4;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* 工具栏样式 */
+.toolbar {
+    -fx-padding: 10;
+    -fx-background-color: #fff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-background-radius: 4;
+}
+
+/* 按钮样式 */
+.action-button {
+    -fx-background-color: #0066cc;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+}
+
+.action-button:hover {
+    -fx-background-color: #0052a3;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    -fx-background-color: #666;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+}
+
+.theme-toggle:selected {
+    -fx-background-color: #333;
+}
+
+/* 编辑器区域 */
+.content-area {
+    -fx-background-color: transparent;
+    -fx-padding: 10;
+}
+
+.code-area {
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4;
+    -fx-padding: 10;
+}
+
+.code-area .content {
+    -fx-background-color: white;
+}
+
+/* 结果视图 */
+.result-view {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4;
+    -fx-background-color: white;
+}
+
+/* 分割线样式 */
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: #ddd;
+    -fx-padding: 0 1;
+}
+
+/* 状态栏样式 */
+.status-bar {
+    -fx-padding: 5 10;
+    -fx-background-color: #fff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, -1);
+    -fx-background-radius: 4;
+}
+
+.stats-label {
+    -fx-text-fill: #666;
+}
+
+/* 暗色主题样式 */
+.dark-theme {
+    -fx-background-color: #1e1e1e;
+}
+
+.dark-theme .toolbar,
+.dark-theme .status-bar {
+    -fx-background-color: #333;
+}
+
+.dark-theme .code-area {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #d4d4d4;
+    -fx-border-color: #444;
+}
+
+.dark-theme .result-view {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #444;
+}
