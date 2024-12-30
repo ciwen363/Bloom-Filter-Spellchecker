@@ -82,6 +82,14 @@
             <artifactId>commons-codec</artifactId>
             <version>1.16.0</version>
         </dependency>
+
+        <!--用于@NotNull-->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
