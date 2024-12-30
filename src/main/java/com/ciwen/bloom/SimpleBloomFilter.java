@@ -31,7 +31,6 @@ public class SimpleBloomFilter<T> implements BloomFilter<T> {
         hashFunctions.add(new FNVHash<>());
         hashFunctions.add(new DJBHash<>());
         hashFunctions.add(new JenkinsHash<>());
-        hashFunctions.add(new SHA256Hash<>());
     }
 
     @Override
