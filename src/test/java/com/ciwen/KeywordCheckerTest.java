@@ -138,6 +138,9 @@ public class KeywordCheckerTest {
         // 验证统计数据的增长
         assertTrue(checker.getTotalChecks() > initialChecks);
         log.info("检查总数从 {} 增加到 {}", initialChecks, checker.getTotalChecks());
+        // 验证误判数据的增长
+        assertTrue(checker.getFalsePositives() >= initialFalsePositives);
+        log.info("误判总数从 {} 增加到 {}", initialFalsePositives, checker.getFalsePositives());
 
         // 测试重置统计
         checker.resetStats();
