@@ -33,7 +33,7 @@ public class KeywordLoader {
 
             // C++20
             "concept", "consteval", "constinit", "co_await", "co_return", "co_yield",
-            "requires"
+            "requires", "module"
     };
 
     private Set<String> allKeywords;
