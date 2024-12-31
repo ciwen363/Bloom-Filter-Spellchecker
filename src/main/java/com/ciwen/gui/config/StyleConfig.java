@@ -18,21 +18,23 @@ public class StyleConfig {
      * 预定义字体族
      */
     public enum FontFamily {
-        COURIER_NEW("Courier New"),
-        CONSOLAS("Consolas"),
-        MONACO("Monaco");
-        /*SOURCE_CODE_PRO("Source Code Pro"),
-        FIRA_CODE("Fira Code");*/
+        COURIER_NEW("Courier New", "新宋体"),
+        CONSOLAS("Consolas", "等线"),
+        MONACO("Monaco", "黑体");
 
-        private final String displayName;
+        private final String englishName;
+        private final String chineseName;
 
-        FontFamily(String displayName) {
-            this.displayName = displayName;
+        FontFamily(String englishName, String chineseName) {
+            this.englishName = englishName;
+            this.chineseName = chineseName;
         }
 
         @Override
         public String toString() {
-            return displayName;
+            // 获取MainController的isEnglish值
+            boolean isEnglish = true; // 需要通过某种方式获取语言设置
+            return isEnglish ? englishName : chineseName;
         }
     }
 

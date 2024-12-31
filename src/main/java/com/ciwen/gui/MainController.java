@@ -5,8 +5,10 @@ import com.ciwen.gui.config.StyleConfig;
 import com.ciwen.gui.config.ThemeConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -80,6 +82,63 @@ public class MainController implements Initializable {
         updateLanguageText();
         /*// 设置代码区域初始样式
         codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");*/
+
+        // 设置语言切换按钮的初始状态
+        languageToggle.setSelected(isEnglish);
+        updateLanguageText();
+        updateUILanguage();
+    }
+
+    /**
+     * 更新UI语言
+     */
+    private void updateUILanguage() {
+        if (isEnglish) {
+            // 按钮和复选框文本
+            keywordBoldCheckBox.setText("Bold Keywords");
+            errorBoldCheckBox.setText("Bold Errors");
+            includeCppKeywordsCheckbox.setText("Include C++ Keywords");
+            resetStatsButton.setText("Reset Statistics");
+            clearTextButton.setText("Clear Text");
+            codeArea.setPromptText("Enter your code here...");
+
+            // 主题相关标签
+            ((Label)themeComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("Theme:");
+            ((Label)fontFamilyComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("Font:");
+            ((Label)fontSizeComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("Size:");
+
+        } else {
+            // 按钮和复选框文本
+            keywordBoldCheckBox.setText("关键字加粗");
+            errorBoldCheckBox.setText("错误单词加粗");
+            includeCppKeywordsCheckbox.setText("包含C++关键字");
+            resetStatsButton.setText("重置统计");
+            clearTextButton.setText("清空文本");
+            codeArea.setPromptText("在此输入代码...");
+
+            // 主题相关标签
+            ((Label)themeComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("主题：");
+            ((Label)fontFamilyComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("字体：");
+            ((Label)fontSizeComboBox.getParent().getChildrenUnmodifiable().stream()
+                    .filter(node -> node instanceof Label)
+                    .findFirst()
+                    .get()).setText("大小：");
+        }
     }
 
     /**
@@ -121,11 +180,13 @@ public class MainController implements Initializable {
             updateHighlighting(); // 只更新右侧显示
         });
 
-        // 语言切换事件
+        // 修改语言切换事件处理
         languageToggle.setOnAction(event -> {
             isEnglish = languageToggle.isSelected();
             updateLanguageText();
+            updateUILanguage();
             updateComboBoxItems();
+            updateStatistics(); // 更新统计信息的语言
         });
 
         // 字体设置监听
@@ -279,10 +340,48 @@ public class MainController implements Initializable {
     }
 
     /**
+     * 中英文标签映射
+     */
+    private final String[][] labels = {
+            {"English", "中文"},
+            {"Theme:", "主题:"},
+            {"Font:", "字体:"},
+            {"Size:", "大小:"},
+            {"Bold Keywords", "关键字加粗"},
+            {"Bold Errors", "错误加粗"},
+            {"Include C++ Keywords", "包含C++关键字"},
+            {"Reset Statistics", "重置统计"},
+            {"Clear Text", "清除文本"}
+    };
+
+    /**
      * 更新语言显示
      */
     private void updateLanguageText() {
+        boolean isEnglish = languageToggle.isSelected();
+
+        // 更新所有标签文本
+        for (Node node : ((HBox)themeComboBox.getParent()).getChildren()) {
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                for (String[] pair : labels) {
+                    if (label.getText().equals(pair[0]) || label.getText().equals(pair[1])) {
+                        label.setText(isEnglish ? pair[0] : pair[1]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // 更新按钮和复选框文本
         languageToggle.setText(isEnglish ? "English" : "中文");
+        resetStatsButton.setText(isEnglish ? "Reset Statistics" : "重置统计");
+        clearTextButton.setText(isEnglish ? "Clear Text" : "清除文本");
+        keywordBoldCheckBox.setText(isEnglish ? "Bold Keywords" : "关键字加粗");
+        errorBoldCheckBox.setText(isEnglish ? "Bold Errors" : "错误加粗");
+        includeCppKeywordsCheckbox.setText(isEnglish ? "Include C++ Keywords" : "包含C++关键字");
+
+        // 刷新下拉框显示
         updateComboBoxItems();
     }
 
@@ -290,12 +389,22 @@ public class MainController implements Initializable {
      * 更新下拉框显示
      */
     private void updateComboBoxItems() {
+        // 保存当前选中值
         ThemeConfig.ThemeName currentTheme = themeComboBox.getValue();
+
+        // 更新主题下拉框
         themeComboBox.getItems().clear();
         for (ThemeConfig.ThemeName theme : ThemeConfig.ThemeName.values()) {
             themeComboBox.getItems().add(theme);
         }
         themeComboBox.setValue(currentTheme);
+
+        // 更新字体族名称
+        fontFamilyComboBox.getItems().clear();
+        for (StyleConfig.FontFamily family : StyleConfig.FontFamily.values()) {
+            fontFamilyComboBox.getItems().add(family);
+        }
+        fontFamilyComboBox.setValue(StyleConfig.FontFamily.COURIER_NEW);
     }
 
     /**
