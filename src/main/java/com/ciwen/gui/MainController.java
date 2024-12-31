@@ -33,12 +33,13 @@ public class MainController implements Initializable {
     @FXML private Label statisticsLabel;
     @FXML private Button resetStatsButton;
     @FXML private Button clearTextButton;
+    @FXML private ToggleButton languageToggle;
 
     // 业务逻辑组件
     private KeywordChecker checker;
     private ThemeConfig currentTheme;
     private StyleConfig currentStyle;
-
+    private boolean isEnglish = true;
     // 属性
     private final SimpleStringProperty statusText = new SimpleStringProperty("");
     private final SimpleDoubleProperty falsePositiveRate = new SimpleDoubleProperty(0.01);
@@ -71,8 +72,14 @@ public class MainController implements Initializable {
         // 设置C++关键字选项默认值
         includeCppKeywordsCheckbox.setSelected(true);
 
-        // 设置代码区域初始样式
-        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");
+        // 设置左侧输入框样式为固定的白色背景
+        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-background-color: white; -fx-border-color: #ddd;");
+
+        // 初始化语言切换按钮
+        languageToggle.setSelected(isEnglish);
+        updateLanguageText();
+        /*// 设置代码区域初始样式
+        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");*/
     }
 
     /**
@@ -80,8 +87,9 @@ public class MainController implements Initializable {
      */
     private void initializeThemeAndStyle() {
         // 设置主题选项
-        themeComboBox.getItems().addAll(ThemeConfig.ThemeName.values());
+        themeComboBox.getItems().setAll(ThemeConfig.ThemeName.values());
         themeComboBox.setValue(ThemeConfig.ThemeName.LIGHT);
+        updateComboBoxItems();
 
         // 设置字体选项
         fontFamilyComboBox.getItems().addAll(StyleConfig.FontFamily.values());
@@ -110,7 +118,14 @@ public class MainController implements Initializable {
         // 主题切换监听
         themeComboBox.setOnAction(event -> {
             currentTheme = ThemeConfig.createTheme(themeComboBox.getValue());
-            updateDisplay();
+            updateHighlighting(); // 只更新右侧显示
+        });
+
+        // 语言切换事件
+        languageToggle.setOnAction(event -> {
+            isEnglish = languageToggle.isSelected();
+            updateLanguageText();
+            updateComboBoxItems();
         });
 
         // 字体设置监听
@@ -230,13 +245,16 @@ public class MainController implements Initializable {
             html.append(escapeHtml(text.substring(lastIndex, matcher.start())));
 
             String word = matcher.group();
-            if (checker.isKeyword(word)) {
+            // 这里会更新统计信息
+            boolean isKeyword = checker.isKeyword(word);
+
+            if (isKeyword) {
                 // 关键字高亮
                 html.append("<span class='keyword'>")
                         .append(escapeHtml(word))
                         .append("</span>");
             } else if (!word.matches("\\d+") && !isCommonWord(word)) {
-                // 可能的错误单词高亮
+                // 可能的错误单词高亮，非关键字且不是数字和常用词的情况
                 html.append("<span class='error'>")
                         .append(escapeHtml(word))
                         .append("</span>");
@@ -257,17 +275,46 @@ public class MainController implements Initializable {
 
         // 更新统计信息
         updateStatistics();
+        updateStatistics();
+    }
+
+    /**
+     * 更新语言显示
+     */
+    private void updateLanguageText() {
+        languageToggle.setText(isEnglish ? "English" : "中文");
+        updateComboBoxItems();
+    }
+
+    /**
+     * 更新下拉框显示
+     */
+    private void updateComboBoxItems() {
+        ThemeConfig.ThemeName currentTheme = themeComboBox.getValue();
+        themeComboBox.getItems().clear();
+        for (ThemeConfig.ThemeName theme : ThemeConfig.ThemeName.values()) {
+            themeComboBox.getItems().add(theme);
+        }
+        themeComboBox.setValue(currentTheme);
     }
 
     /**
      * 更新统计信息
      */
     private void updateStatistics() {
-        String stats = String.format(
-                "总检查: %d | 误判: %d | 误判率: %.2f%% | 关键字数: %d",
-                checker.getTotalChecks(),
-                checker.getFalsePositives(),
-                checker.getActualFalsePositiveRate() * 100,
+        String statsFormat = isEnglish ?
+                "Total Checks: %d | False Positives: %d | False Positive Rate: %.2f%% | Keywords: %d" :
+                "总检查数: %d | 误判数: %d | 误判率: %.2f%% | 关键字数: %d";
+
+        int totalChecks = checker.getTotalChecks();
+        int falsePositives = checker.getFalsePositives();
+        double rate = totalChecks > 0 ?
+                (double) falsePositives / totalChecks * 100 : 0.0;
+
+        String stats = String.format(statsFormat,
+                totalChecks,
+                falsePositives,
+                rate,
                 checker.getKnownKeywords().size()
         );
         statusText.set(stats);

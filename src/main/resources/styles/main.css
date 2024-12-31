@@ -36,17 +36,30 @@
     -fx-background-color: #333;
 }
 
+/* 语言切换按钮样式 */
+.language-toggle {
+    -fx-background-color: #0066cc;
+    -fx-text-fill: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 4;
+}
+
+.language-toggle:selected {
+    -fx-background-color: #004d99;
+}
+
 /* 编辑器区域 */
 .content-area {
     -fx-background-color: transparent;
     -fx-padding: 10;
 }
 
+/* 代码区域样式 */
 .code-area {
     -fx-font-family: "Courier New", monospace;
     -fx-font-size: 14px;
-    -fx-background-color: white;
-    -fx-border-color: #ddd;
+    -fx-background-color: white !important;
+    -fx-border-color: #ddd !important;
     -fx-border-radius: 4;
     -fx-padding: 10;
 }

@@ -20,9 +20,9 @@ public class StyleConfig {
     public enum FontFamily {
         COURIER_NEW("Courier New"),
         CONSOLAS("Consolas"),
-        MONACO("Monaco"),
-        SOURCE_CODE_PRO("Source Code Pro"),
-        FIRA_CODE("Fira Code");
+        MONACO("Monaco");
+        /*SOURCE_CODE_PRO("Source Code Pro"),
+        FIRA_CODE("Fira Code");*/
 
         private final String displayName;
 

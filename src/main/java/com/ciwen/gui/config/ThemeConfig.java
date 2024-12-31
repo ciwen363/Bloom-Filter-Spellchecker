@@ -22,26 +22,26 @@ public class ThemeConfig {
     private boolean keywordBold;
     // 错误文本是否加粗
     private boolean errorBold;
-
+    // 用于控制语言
+    private boolean isEnglish;
     /**
      * 预定义的主题名称
      */
     public enum ThemeName {
-        LIGHT("Light Theme"),
-        DARK("Dark Theme"),
-        SOLARIZED("Solarized"),
-        MONOKAI("Monokai"),
-        GITHUB("GitHub");
+        LIGHT("Light Theme", "亮色主题"),
+        DARK("Dark Theme", "暗色主题"),
+        MONOKAI("Monokai", "Monokai主题");
 
-        private final String displayName;
+        private final String englishName;
+        private final String chineseName;
 
-        ThemeName(String displayName) {
-            this.displayName = displayName;
+        ThemeName(String englishName, String chineseName) {
+            this.englishName = englishName;
+            this.chineseName = chineseName;
         }
 
-        @Override
-        public String toString() {
-            return displayName;
+        public String getDisplayName(boolean isEnglish) {
+            return isEnglish ? englishName : chineseName;
         }
     }
 
@@ -56,32 +56,20 @@ public class ThemeConfig {
             case LIGHT:
                 config.setBackgroundColor(Color.WHITE);
                 config.setTextColor(Color.BLACK);
-                config.setKeywordColor(Color.BLUE);
+                config.setKeywordColor(Color.CORNFLOWERBLUE);
                 config.setErrorColor(Color.RED);
                 break;
             case DARK:
                 config.setBackgroundColor(Color.web("#1E1E1E"));
                 config.setTextColor(Color.web("#D4D4D4"));
-                config.setKeywordColor(Color.web("#569CD6"));
-                config.setErrorColor(Color.web("#F44747"));
-                break;
-            case SOLARIZED:
-                config.setBackgroundColor(Color.web("#002B36"));
-                config.setTextColor(Color.web("#839496"));
-                config.setKeywordColor(Color.web("#268BD2"));
-                config.setErrorColor(Color.web("#DC322F"));
+                config.setKeywordColor(Color.CORNFLOWERBLUE);
+                config.setErrorColor(Color.RED);
                 break;
             case MONOKAI:
                 config.setBackgroundColor(Color.web("#272822"));
                 config.setTextColor(Color.web("#F8F8F2"));
-                config.setKeywordColor(Color.web("#66D9EF"));
-                config.setErrorColor(Color.web("#F92672"));
-                break;
-            case GITHUB:
-                config.setBackgroundColor(Color.web("#FFFFFF"));
-                config.setTextColor(Color.web("#24292E"));
-                config.setKeywordColor(Color.web("#D73A49"));
-                config.setErrorColor(Color.web("#B31D28"));
+                config.setKeywordColor(Color.CORNFLOWERBLUE);
+                config.setErrorColor(Color.RED);
                 break;
         }
         return config;
