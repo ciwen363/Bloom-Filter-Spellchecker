@@ -1,4 +1,4 @@
-package com.ciwen.bloom;
+package com.ciwen.bloom.hash;
 
 public class FNVHash<T> implements HashFunction<T> {
     private static final long FNV_64_PRIME = 0x100000001b3L; //初始值

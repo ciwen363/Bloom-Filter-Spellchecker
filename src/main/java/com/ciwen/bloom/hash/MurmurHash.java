@@ -1,4 +1,4 @@
-package com.ciwen.bloom;
+package com.ciwen.bloom.hash;
 
 //MurmurHash特点是速度快、冲突率低
 public class MurmurHash<T> implements HashFunction<T> {

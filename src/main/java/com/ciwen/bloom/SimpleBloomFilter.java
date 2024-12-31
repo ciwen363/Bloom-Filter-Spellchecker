@@ -1,10 +1,11 @@
 package com.ciwen.bloom;
 
+import com.ciwen.bloom.hash.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import com.ciwen.bloom.bitset.CustomBitSet;
-import java.util.BitSet;
+
 import java.util.List;
 
 /*实现 BloomFilter 接口的具体类*/

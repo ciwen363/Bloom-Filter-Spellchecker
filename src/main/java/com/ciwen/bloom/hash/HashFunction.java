@@ -1,4 +1,4 @@
-package com.ciwen.bloom;
+package com.ciwen.bloom.hash;
 
 /*哈希函数的接口定义*/
 public interface HashFunction<T> {

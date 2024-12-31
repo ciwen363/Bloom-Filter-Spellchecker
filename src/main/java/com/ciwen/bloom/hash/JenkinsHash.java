@@ -1,4 +1,4 @@
-package com.ciwen.bloom;
+package com.ciwen.bloom.hash;
 
 public class JenkinsHash<T> implements HashFunction<T> {
     @Override
