@@ -1,6 +1,7 @@
 package com.ciwen.gui;
 
 import com.ciwen.checker.KeywordChecker;
+import com.ciwen.gui.components.LineNumberTextArea;
 import com.ciwen.gui.config.StyleConfig;
 import com.ciwen.gui.config.ThemeConfig;
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class MainController implements Initializable {
     // FXML注入的UI组件
-    @FXML private TextArea codeArea;
+    @FXML private LineNumberTextArea codeArea;
     @FXML private WebView resultView;
     @FXML private ComboBox<ThemeConfig.ThemeName> themeComboBox;
     @FXML private ComboBox<StyleConfig.FontFamily> fontFamilyComboBox;
@@ -50,6 +51,9 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // 初始化检查器
         checker = new KeywordChecker(falsePositiveRate.get(), true);
+
+        // 修改代码区域样式设置
+        codeArea.setTextAreaStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-background-color: white; -fx-border-color: #ddd;");
 
         // 初始化UI组件
         initializeComponents();
@@ -254,7 +258,7 @@ public class MainController implements Initializable {
                 ThemeConfig.toRGBA(currentTheme.getBackgroundColor()),
                 ThemeConfig.toRGBA(currentTheme.getTextColor())
         );
-        codeArea.setStyle(style);
+        codeArea.setTextAreaStyle(style);
     }
 
     /**
@@ -272,18 +276,28 @@ public class MainController implements Initializable {
                 font-size: %dpx;
                 background-color: %s;
                 color: %s;
-                margin: 10px;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+            .line-numbers {
+                background-color: #f0f0f0;
+                padding: 10px;
+                text-align: right;
+                border-right: 1px solid #ddd;
+                color: #666;
+                font-family: monospace;
+                min-width: 30px;
+                margin-right: 10px;
+            }
+            .code-content {
+                flex: 1;
+                padding: 10px;
                 white-space: pre-wrap;
                 word-wrap: break-word;
             }
-            .keyword {
-                color: %s;
-                font-weight: %s;
-            }
-            .error {
-                color: %s;
-                font-weight: %s;
-            }
+            .keyword { color: %s; font-weight: %s; }
+            .error { color: %s; font-weight: %s; }
             </style></head><body>
             """,
                 currentStyle.getFontFamily(),
@@ -295,6 +309,14 @@ public class MainController implements Initializable {
                 ThemeConfig.toRGBA(currentTheme.getErrorColor()),
                 currentStyle.isErrorBold() ? "bold" : "normal"
         ));
+
+        // 添加行号容器
+        html.append("<div class='line-numbers'>");
+        String[] lines = text.split("\n", -1);
+        for (int i = 1; i <= lines.length; i++) {
+            html.append(i).append("<br>");
+        }
+        html.append("</div><div class='code-content'>");
 
         // 处理文本内容
         Pattern wordPattern = Pattern.compile("\\b\\w+\\b");
@@ -329,10 +351,11 @@ public class MainController implements Initializable {
 
         // 添加剩余文本
         html.append(escapeHtml(text.substring(lastIndex)));
-        html.append("</body></html>");
+        html.append("</div></body></html>");
 
         // 更新WebView内容
         resultView.getEngine().loadContent(html.toString());
+        updateStatistics();
 
         // 更新统计信息
         updateStatistics();

@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
 <?import javafx.geometry.Insets?>
-
+<?import com.ciwen.gui.components.LineNumberTextArea?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.ciwen.gui.MainController"
@@ -45,8 +45,7 @@
 
     <!-- 主要编辑区域 -->
     <SplitPane VBox.vgrow="ALWAYS" styleClass="content-area">
-        <TextArea fx:id="codeArea" promptText="Enter your code here..."
-                  wrapText="true" styleClass="code-area"/>
+        <LineNumberTextArea fx:id="codeArea" styleClass="code-area"/>
         <WebView fx:id="resultView" styleClass="result-view"/>
     </SplitPane>
 
@@ -55,4 +54,3 @@
         <Label fx:id="statisticsLabel" styleClass="stats-label"/>
     </HBox>
 </VBox>
-

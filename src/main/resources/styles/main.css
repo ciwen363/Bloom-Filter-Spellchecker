@@ -62,6 +62,12 @@
     -fx-border-color: #ddd !important;
     -fx-border-radius: 4;
     -fx-padding: 10;
+    -fx-text-fill: black !important;
+}
+
+/* 确保TextArea文本始终为黑色 */
+.code-area .text-area {
+    -fx-text-fill: black !important;
 }
 
 .code-area .content {
@@ -105,8 +111,13 @@
 
 .dark-theme .code-area {
     -fx-background-color: #1e1e1e;
-    -fx-text-fill: #d4d4d4;
+    -fx-text-fill: black !important;;
     -fx-border-color: #444;
+}
+
+/* 确保在暗色主题下TextArea文本也始终为黑色 */
+.dark-theme .code-area .text-area {
+    -fx-text-fill: black !important;
 }
 
 .dark-theme .result-view {
