@@ -49,9 +49,10 @@ public class KeywordChecker {
         String normalizedWord = word.trim().toLowerCase();
         boolean mightBeKeyword = bloomFilter.mightContain(normalizedWord);
 
-        // 检查是否为误判
+        // 检查是否为误判，只有当布隆过滤器认为是关键字，但实际不是时，才算误判
         if (mightBeKeyword && !knownKeywords.contains(normalizedWord)) {
             falsePositives++;
+            return false; // 返回false因为这是误判
         }
 
         return mightBeKeyword;

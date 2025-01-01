@@ -81,12 +81,6 @@ public class MainController implements Initializable {
         // 设置左侧输入框样式为固定的白色背景
         codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-background-color: white; -fx-border-color: #ddd;");
 
-        // 初始化语言切换按钮
-        languageToggle.setSelected(isEnglish);
-        updateLanguageText();
-        /*// 设置代码区域初始样式
-        codeArea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px;");*/
-
         // 设置语言切换按钮的初始状态
         languageToggle.setSelected(isEnglish);
         updateLanguageText();
@@ -355,10 +349,8 @@ public class MainController implements Initializable {
 
         // 更新WebView内容
         resultView.getEngine().loadContent(html.toString());
-        updateStatistics();
 
         // 更新统计信息
-        updateStatistics();
         updateStatistics();
     }
 
