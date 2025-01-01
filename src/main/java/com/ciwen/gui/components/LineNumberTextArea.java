@@ -40,8 +40,12 @@ public class LineNumberTextArea extends HBox {
 
         // 监听文本变化，更新行号
         textArea.textProperty().addListener((obs, oldText, newText) -> updateLineNumbers());
-        textArea.scrollTopProperty().addListener((obs, oldVal, newVal) ->
-                lineNumbersScroll.setVvalue(newVal.doubleValue() / textArea.getScrollTop()));
+        textArea.scrollTopProperty().addListener((obs, oldVal, newVal) -> {
+            double scrollTop = textArea.getScrollTop();
+            if (scrollTop > 0) { // getScrollTop() 可能返回 0，导致除零异常
+                lineNumbersScroll.setVvalue(newVal.doubleValue() / scrollTop);
+            }
+        });
 
         // 组装组件
         getChildren().addAll(lineNumbersScroll, textArea);
