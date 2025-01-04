@@ -1,0 +1,71 @@
+@startuml 系统流程图
+
+skinparam backgroundColor white
+skinparam activity {
+    BackgroundColor LightGreen
+    BorderColor Green
+    FontColor black
+}
+
+|初始化阶段\nInitialization|
+start
+:系统配置加载\nSystem Config Load;
+split
+    :布隆过滤器初始化\nBloom Filter Init;
+split again
+    :关键字库加载\nKeywords Load;
+end split
+
+|界面准备\nUI Preparation|
+:FXML加载\nFXML Load;
+split
+    :控制器初始化\nController Init;
+split again
+    :样式设置\nStyle Setup;
+end split
+:创建组件\nCreate Components;
+
+|核心处理\nCore Processing|
+while (运行中?\nRunning?) is (是\nYes)
+    fork
+        |左分支\nLeft Branch|
+        :文本处理\nText Processing;
+        :分词处理\nTokenize;
+        :关键字检查\nKeyword Check;
+        if (是关键字?) then (是)
+            :高亮显示\nHighlight;
+        else (否)
+            :普通显示\nNormal;
+        endif
+
+    fork again
+        |中心\nCenter|
+        :事件分发\nEvent Dispatch;
+        :状态更新\nState Update;
+
+    fork again
+        |右分支\nRight Branch|
+        :配置处理\nConfig Process;
+        split
+            :主题管理\nTheme;
+        split again
+            :语言管理\nLanguage;
+        split again
+            :字体管理\nFont;
+        end split
+    end fork
+
+    |统计分析\nStatistics|
+    :更新统计\nUpdate Stats;
+    :计算误判率\nCalc FP Rate;
+endwhile (否\nNo)
+
+|结束处理\nFinalization|
+split
+    :保存配置\nSave Config;
+split again
+    :清理资源\nCleanup;
+end split
+stop
+
+@enduml

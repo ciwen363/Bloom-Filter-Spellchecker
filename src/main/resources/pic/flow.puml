@@ -1,0 +1,99 @@
+@startuml 完整系统流程图
+
+skinparam backgroundColor white
+skinparam activity {
+    BackgroundColor LightGreen
+    BorderColor Green
+    FontColor black
+}
+
+|系统启动\nSystem Startup|
+start
+:加载配置文件\nLoad Configuration;
+:读取主题设置\nLoad Theme Settings;
+:读取语言设置\nLoad Language Settings;
+:读取字体设置\nLoad Font Settings;
+
+|布隆过滤器初始化\nBloom Filter Init|
+:计算最优大小\nCalculate Optimal Size;
+:初始化位数组\nInit Bit Array;
+:配置哈希函数\nSetup Hash Functions;
+:设置误判率\nSet False Positive Rate;
+
+|关键字管理初始化\nKeyword Management Init|
+:初始化关键字加载器\nInit Keyword Loader;
+:加载C关键字\nLoad C Keywords;
+:加载C++关键字\nLoad C++ Keywords;
+:初始化关键字检查器\nInit Keyword Checker;
+
+|界面初始化\nGUI Initialization|
+:加载FXML布局\nLoad FXML;
+:初始化主控制器\nInit Main Controller;
+:创建行号文本区\nCreate Line Number Text Area;
+:配置文本区样式\nSetup Text Area Style;
+:设置语法高亮器\nSetup Syntax Highlighter;
+:设置事件监听器\nSetup Event Listeners;
+:应用主题样式\nApply Theme;
+:应用字体设置\nApply Font Settings;
+
+|主程序循环\nMain Loop|
+while (程序运行中?\nIs Running?) is (是\nYes)
+    fork
+        |文本编辑处理\nText Editing|
+        :监听文本变化\nMonitor Text Changes;
+        :获取变更内容\nGet Changes;
+        :文本分词处理\nTokenize Text;
+        :遍历单词\nIterate Words;
+        while (还有单词?\nMore Words?) is (是\nYes)
+            :获取当前单词\nGet Current Word;
+            :布隆过滤器检查\nBloom Filter Check;
+            if (是关键字?\nIs Keyword?) then (是\nYes)
+                :应用关键字样式\nApply Keyword Style;
+                :更新关键字统计\nUpdate Keyword Stats;
+            else (否\nNo)
+                :应用普通样式\nApply Normal Style;
+            endif
+        endwhile (否\nNo)
+        :更新行号显示\nUpdate Line Numbers;
+
+    fork again
+        |配置处理\nConfiguration|
+        if (主题切换?\nTheme Switch?) then (是\nYes)
+            :切换主题\nSwitch Theme;
+            :更新界面样式\nUpdate UI Style;
+        endif
+        if (语言切换?\nLanguage Switch?) then (是\nYes)
+            :切换语言\nSwitch Language;
+            :重新加载关键字\nReload Keywords;
+            :刷新界面文本\nRefresh UI Text;
+        endif
+        if (字体设置?\nFont Settings?) then (是\nYes)
+            :更新字体\nUpdate Font;
+            :重绘文本区\nRedraw Text Area;
+        endif
+        if (C++开关切换?\nC++ Toggle?) then (是\nYes)
+            :切换C++关键字\nToggle C++ Keywords;
+            :重新检查文本\nRecheck Text;
+        endif
+
+    fork again
+        |统计处理\nStatistics|
+        :更新总检查次数\nUpdate Total Checks;
+        :更新关键字命中数\nUpdate Keyword Hits;
+        :更新误判次数\nUpdate False Positives;
+        :计算命中率\nCalculate Hit Rate;
+        :计算误判率\nCalculate FP Rate;
+        :更新统计显示\nUpdate Stats Display;
+    end fork
+endwhile (否\nNo)
+
+|结束处理\nFinalization|
+:保存当前配置\nSave Current Config;
+:保存主题设置\nSave Theme Settings;
+:保存语言设置\nSave Language Settings;
+:保存字体设置\nSave Font Settings;
+:保存窗口状态\nSave Window State;
+:清理资源\nCleanup Resources;
+stop
+
+@enduml
