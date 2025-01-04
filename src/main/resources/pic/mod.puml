@@ -1,71 +1,121 @@
-@startuml 系统流程图
+@startuml 系统完整模块图
 
+skinparam packageStyle rectangle
 skinparam backgroundColor white
-skinparam activity {
-    BackgroundColor LightGreen
-    BorderColor Green
-    FontColor black
+scale max 800 width
+scale max 1100 height
+
+package "C/C++关键字检查系统\nKeyword Checker System" {
+    package "核心功能层\nCore Layer" as Core {
+        package "布隆过滤器模块\nBloom Filter" as Bloom {
+            [过滤器接口\nBloomFilter] as BF
+            [过滤器实现\nSimpleBloomFilter] as BFImpl
+            [位数组\nCustomBitSet] as BitSet
+
+            package "哈希函数包\nHash Package" as Hash {
+                [哈希函数接口\nHashFunction] as HF
+                [MurmurHash实现] as MH
+                [FNV哈希实现\nFNVHash] as FH
+                [DJB哈希实现\nDJBHash] as DH
+                [Jenkins哈希实现\nJenkinsHash] as JH
+            }
+        }
+
+        package "关键字管理模块\nKeyword Management" as KW {
+            [关键字检查器\nKeywordChecker] as KC
+            [关键字加载器\nKeywordLoader] as KL
+            [C关键字集合\nC Keywords] as CK
+            [C++关键字集合\nC++ Keywords] as CPK
+        }
+    }
+
+    package "界面展示层\nUI Layer" as UI {
+        package "GUI组件\nGUI Components" as BaseGUI {
+            [主程序\nMainApplication] as MA
+            [控制器\nMainController] as MC
+            [自定义组件\nCustom Components] as CC
+            [行号文本区\nLineNumberTextArea] as LNTA
+        }
+
+        package "控制器功能\nController Functions" as Ctrl {
+            [事件处理\nEvent Handler] as EH
+            [文本处理\nText Processor] as TP
+            [状态管理\nState Manager] as SM
+        }
+    }
+
+    package "配置管理层\nConfig Layer" as Config {
+        package "主题配置\nTheme Config" as Theme {
+            [主题类型\nTheme Type] as TT
+            [颜色方案\nColor Scheme] as CS
+            [主题切换\nTheme Switch] as TS
+        }
+
+        package "样式配置\nStyle Config" as Style {
+            [字体族\nFont Family] as FF
+            [字体大小\nFont Size] as FS
+            [样式切换\nStyle Switch] as SS
+        }
+    }
+
+    package "资源模块\nResources" as Resources {
+        package "布局文件\nLayout" as Layout {
+            [主界面布局\nmain.fxml] as MF
+        }
+
+        package "样式文件\nStyles" as StyleRes {
+            [主样式表\nmain.css] as CSS
+        }
+    }
+
+    package "测试验证层\nTest Layer" as Test {
+        package "过滤器测试\nFilter Tests" as BTest {
+            [功能测试\nFunction Test] as FT
+            [性能测试\nPerformance Test] as PT
+            [边界测试\nBoundary Test] as BT
+        }
+
+        package "关键字测试\nKeyword Tests" as KTest {
+            [识别测试\nRecognition Test] as RT
+            [误判率测试\nFP Rate Test] as FPT
+            [统计测试\nStatistics Test] as ST
+        }
+    }
 }
 
-|初始化阶段\nInitialization|
-start
-:系统配置加载\nSystem Config Load;
-split
-    :布隆过滤器初始化\nBloom Filter Init;
-split again
-    :关键字库加载\nKeywords Load;
-end split
+' 核心功能层依赖关系
+BF <-- BFImpl : 实现\nimplements
+BFImpl --> BitSet : 使用\nuses
+BFImpl --> HF : 使用\nuses
+HF <-- MH : 实现\nimplements
+HF <-- FH : 实现\nimplements
+HF <-- DH : 实现\nimplements
+HF <-- JH : 实现\nimplements
 
-|界面准备\nUI Preparation|
-:FXML加载\nFXML Load;
-split
-    :控制器初始化\nController Init;
-split again
-    :样式设置\nStyle Setup;
-end split
-:创建组件\nCreate Components;
+' 关键字管理依赖关系
+KC --> BFImpl : 使用\nuses
+KC --> KL : 使用\nuses
+KL --> CK : 加载\nloads
+KL --> CPK : 加载\nloads
 
-|核心处理\nCore Processing|
-while (运行中?\nRunning?) is (是\nYes)
-    fork
-        |左分支\nLeft Branch|
-        :文本处理\nText Processing;
-        :分词处理\nTokenize;
-        :关键字检查\nKeyword Check;
-        if (是关键字?) then (是)
-            :高亮显示\nHighlight;
-        else (否)
-            :普通显示\nNormal;
-        endif
+' GUI层依赖关系
+MA --> MC : 控制\ncontrols
+MC --> CC : 使用\nuses
+MC --> LNTA : 使用\nuses
+MC --> EH : 包含\ncontains
+MC --> TP : 包含\ncontains
+MC --> SM : 包含\ncontains
 
-    fork again
-        |中心\nCenter|
-        :事件分发\nEvent Dispatch;
-        :状态更新\nState Update;
+' 配置层依赖关系
+MC --> TT : 配置\nconfigures
+MC --> CS : 配置\nconfigures
+MC --> TS : 配置\nconfigures
+MC --> FF : 配置\nconfigures
+MC --> FS : 配置\nconfigures
+MC --> SS : 配置\nconfigures
 
-    fork again
-        |右分支\nRight Branch|
-        :配置处理\nConfig Process;
-        split
-            :主题管理\nTheme;
-        split again
-            :语言管理\nLanguage;
-        split again
-            :字体管理\nFont;
-        end split
-    end fork
-
-    |统计分析\nStatistics|
-    :更新统计\nUpdate Stats;
-    :计算误判率\nCalc FP Rate;
-endwhile (否\nNo)
-
-|结束处理\nFinalization|
-split
-    :保存配置\nSave Config;
-split again
-    :清理资源\nCleanup;
-end split
-stop
+' 资源依赖关系
+MA --> MF : 加载\nloads
+MA --> CSS : 使用\nuses
 
 @enduml
