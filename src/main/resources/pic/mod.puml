@@ -6,29 +6,6 @@ scale max 800 width
 scale max 1100 height
 
 package "C/C++关键字检查系统\nKeyword Checker System" {
-    package "核心功能层\nCore Layer" as Core {
-        package "布隆过滤器模块\nBloom Filter" as Bloom {
-            [过滤器接口\nBloomFilter] as BF
-            [过滤器实现\nSimpleBloomFilter] as BFImpl
-            [位数组\nCustomBitSet] as BitSet
-
-            package "哈希函数包\nHash Package" as Hash {
-                [哈希函数接口\nHashFunction] as HF
-                [MurmurHash实现] as MH
-                [FNV哈希实现\nFNVHash] as FH
-                [DJB哈希实现\nDJBHash] as DH
-                [Jenkins哈希实现\nJenkinsHash] as JH
-            }
-        }
-
-        package "关键字管理模块\nKeyword Management" as KW {
-            [关键字检查器\nKeywordChecker] as KC
-            [关键字加载器\nKeywordLoader] as KL
-            [C关键字集合\nC Keywords] as CK
-            [C++关键字集合\nC++ Keywords] as CPK
-        }
-    }
-
     package "界面展示层\nUI Layer" as UI {
         package "GUI组件\nGUI Components" as BaseGUI {
             [主程序\nMainApplication] as MA
@@ -58,16 +35,6 @@ package "C/C++关键字检查系统\nKeyword Checker System" {
         }
     }
 
-    package "资源模块\nResources" as Resources {
-        package "布局文件\nLayout" as Layout {
-            [主界面布局\nmain.fxml] as MF
-        }
-
-        package "样式文件\nStyles" as StyleRes {
-            [主样式表\nmain.css] as CSS
-        }
-    }
-
     package "测试验证层\nTest Layer" as Test {
         package "过滤器测试\nFilter Tests" as BTest {
             [功能测试\nFunction Test] as FT
@@ -79,6 +46,39 @@ package "C/C++关键字检查系统\nKeyword Checker System" {
             [识别测试\nRecognition Test] as RT
             [误判率测试\nFP Rate Test] as FPT
             [统计测试\nStatistics Test] as ST
+        }
+    }
+
+    package "资源模块\nResources" as Resources {
+        package "布局文件\nLayout" as Layout {
+            [主界面布局\nmain.fxml] as MF
+        }
+
+        package "样式文件\nStyles" as StyleRes {
+            [主样式表\nmain.css] as CSS
+        }
+    }
+
+    package "核心功能层\nCore Layer" as Core {
+        package "布隆过滤器模块\nBloom Filter" as Bloom {
+            [过滤器接口\nBloomFilter] as BF
+            [过滤器实现\nSimpleBloomFilter] as BFImpl
+            [位数组\nCustomBitSet] as BitSet
+
+            package "哈希函数包\nHash Package" as Hash {
+                [哈希函数接口\nHashFunction] as HF
+                [MurmurHash实现] as MH
+                [FNV哈希实现\nFNVHash] as FH
+                [DJB哈希实现\nDJBHash] as DH
+                [Jenkins哈希实现\nJenkinsHash] as JH
+            }
+        }
+
+        package "关键字管理模块\nKeyword Management" as KW {
+            [关键字检查器\nKeywordChecker] as KC
+            [关键字加载器\nKeywordLoader] as KL
+            [C关键字集合\nC Keywords] as CK
+            [C++关键字集合\nC++ Keywords] as CPK
         }
     }
 }
@@ -117,5 +117,8 @@ MC --> SS : 配置\nconfigures
 ' 资源依赖关系
 MA --> MF : 加载\nloads
 MA --> CSS : 使用\nuses
+
+' GUI层与核心功能层的连接
+TP --> KC : 使用\nuses
 
 @enduml
