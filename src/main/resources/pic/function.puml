@@ -1,0 +1,109 @@
+@startuml 函数调用关系
+
+skinparam backgroundColor white
+skinparam activity {
+    BackgroundColor LightYellow
+    BorderColor Orange
+    FontColor black
+}
+
+class MainApplication {
+    +start(Stage primaryStage): void
+    +main(String[] args): void
+}
+
+class MainController {
+    +initialize(): void
+    +processText(String text): void
+    +handleConfigChange(ConfigType type): void
+    +updateUI(): void
+}
+
+class KeywordChecker {
+    +checkKeyword(String word): boolean
+    +addKeyword(String keyword): void
+    +getStatistics(): Statistics
+}
+
+class BloomFilter {
+    +add(String element): void
+    +mightContain(String element): boolean
+    +getFalsePositiveRate(): double
+}
+
+class KeywordLoader {
+    +loadKeywords(): Set<String>
+    +getCKeywords(): Set<String>
+    +getCppKeywords(): Set<String>
+    +setMode(KeywordMode mode): void
+}
+
+class Statistics {
+    +updateStats(boolean isKeyword): void
+    +getHitRate(): double
+    +getFalsePositiveRate(): double
+    +getTotalChecks(): long
+}
+
+class ConfigManager {
+    +loadConfig(): Config
+    +saveConfig(Config config): void
+    +updateTheme(ThemeType theme): void
+    +updateFont(FontConfig font): void
+}
+
+class UIUpdater {
+    +highlight(int start, int end): void
+    +updateStats(Statistics stats): void
+    +refreshTheme(ThemeType theme): void
+}
+
+class BitSet {
+    +set(int index): void
+    +get(int index): boolean
+    +clear(): void
+    +size(): int
+}
+
+class HashFunction {
+    +hash(String input): long
+}
+
+MainApplication --> MainController: "创建\n输入: Stage\n返回: void"
+MainController --> KeywordChecker: "使用\n输入: String\n返回: boolean"
+MainController --> ConfigManager: "配置管理\n输入: ConfigType\n返回: void"
+MainController --> UIUpdater: "更新界面\n输入: 多种类型\n返回: void"
+
+KeywordChecker --> BloomFilter: "检查关键字\n输入: String\n返回: boolean"
+KeywordChecker --> KeywordLoader: "加载关键字\n输入: void\n返回: Set<String>"
+KeywordChecker --> Statistics: "更新统计\n输入: boolean\n返回: void"
+
+BloomFilter --> BitSet: "位操作\n输入: int\n返回: boolean"
+BloomFilter --> HashFunction: "计算哈希\n输入: String\n返回: long"
+
+ConfigManager --> "FileIO": "文件操作\n输入: String\n返回: String"
+UIUpdater --> "JavaFX": "界面更新\n输入: 多种类型\n返回: void"
+
+note right of MainController
+  主要控制流程：
+  1. 接收用户输入
+  2. 处理文本变化
+  3. 处理配置变化
+  4. 更新界面显示
+end note
+
+note right of KeywordChecker
+  关键字检查流程：
+  1. 分词处理
+  2. 布隆过滤器检查
+  3. 更新统计信息
+end note
+
+note right of BloomFilter
+  布隆过滤器操作：
+  1. 多哈希函数计算
+  2. 位数组操作
+  3. 误判率控制
+end note
+
+@enduml

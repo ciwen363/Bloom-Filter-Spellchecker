@@ -1,0 +1,54 @@
+@startuml 数据结构关系图
+
+skinparam class {
+    BackgroundColor LightBlue
+    BorderColor Blue
+    ArrowColor Black
+}
+
+class BitSet {
+    -bits: long[]
+    -size: int
+    +set(index: int)
+    +get(index: int): boolean
+    +clear()
+}
+
+class BloomFilter {
+    -bitSet: BitSet
+    -hashFunctions: List<HashFunction>
+    -expectedElements: int
+    -falsePositiveRate: double
+    +add(element: String)
+    +mightContain(element: String): boolean
+}
+
+class KeywordChecker {
+    -bloomFilter: BloomFilter
+    -keywordLoader: KeywordLoader
+    -statistics: Statistics
+    +checkKeyword(word: String): boolean
+}
+
+class Statistics {
+    -totalChecks: long
+    -keywordHits: long
+    -falsePositives: long
+    +updateStats(isKeyword: boolean)
+    +getHitRate(): double
+}
+
+class KeywordLoader {
+    -cKeywords: Set<String>
+    -cppKeywords: Set<String>
+    -currentMode: KeywordMode
+    +loadKeywords()
+    +getKeywords(): Set<String>
+}
+
+BitSet <-- BloomFilter
+BloomFilter <-- KeywordChecker
+KeywordLoader <-- KeywordChecker
+Statistics <-- KeywordChecker
+
+@enduml
