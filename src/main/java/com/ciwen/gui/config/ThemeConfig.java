@@ -60,14 +60,14 @@ public class ThemeConfig {
                 config.setErrorColor(Color.RED);
                 break;
             case DARK:
-                config.setBackgroundColor(Color.web("#1E1E1E"));
-                config.setTextColor(Color.web("#D4D4D4"));
+                config.setBackgroundColor(Color.web("#1E1E1E"));//深灰
+                config.setTextColor(Color.web("#D4D4D4"));//浅灰
                 config.setKeywordColor(Color.CORNFLOWERBLUE);
                 config.setErrorColor(Color.RED);
                 break;
             case MONOKAI:
-                config.setBackgroundColor(Color.web("#272822"));
-                config.setTextColor(Color.web("#F8F8F2"));
+                config.setBackgroundColor(Color.web("#272822"));//深灰绿色
+                config.setTextColor(Color.web("#F8F8F2"));//亮白色
                 config.setKeywordColor(Color.CORNFLOWERBLUE);
                 config.setErrorColor(Color.RED);
                 break;

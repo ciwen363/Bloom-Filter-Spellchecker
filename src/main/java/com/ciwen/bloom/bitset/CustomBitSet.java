@@ -13,7 +13,7 @@ public class CustomBitSet {
 
     public CustomBitSet(int size) {
         if (size < 0) {
-            throw new IllegalArgumentException("Negative size: " + size);
+            throw new IllegalArgumentException("不合理size: " + size);
         }
         this.size = size;
         bits = new long[wordIndex(size - 1) + 1];
@@ -25,7 +25,7 @@ public class CustomBitSet {
 
     public void set(int bitIndex) {
         if (bitIndex < 0 || bitIndex >= size) {
-            throw new IndexOutOfBoundsException("BitIndex: " + bitIndex);
+            throw new IndexOutOfBoundsException("位索引: " + bitIndex);
         }
         int wordIndex = wordIndex(bitIndex);
         bits[wordIndex] |= (1L << bitIndex);
@@ -33,7 +33,7 @@ public class CustomBitSet {
 
     public boolean get(int bitIndex) {
         if (bitIndex < 0 || bitIndex >= size) {
-            throw new IndexOutOfBoundsException("BitIndex: " + bitIndex);
+            throw new IndexOutOfBoundsException("位索引: " + bitIndex);
         }
         int wordIndex = wordIndex(bitIndex);
         return ((bits[wordIndex] & (1L << bitIndex)) != 0);

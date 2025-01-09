@@ -16,7 +16,7 @@ public class MainApplication extends Application {
         try {
             URL fxmlUrl = getClass().getResource("/fxml/main.fxml");
             if (fxmlUrl == null) {
-                throw new IOException("Cannot find /fxml/main.fxml");
+                throw new IOException("无法找到 /fxml/main.fxml");
             }
 
             Parent root = FXMLLoader.load(fxmlUrl);

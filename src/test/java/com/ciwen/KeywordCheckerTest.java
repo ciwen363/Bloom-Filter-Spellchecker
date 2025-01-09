@@ -20,7 +20,7 @@ public class KeywordCheckerTest {
         log.info("初始化 KeywordChecker，期望的元素数量: {}，假阳性率: {}", EXPECTED_ELEMENTS, FALSE_POSITIVE_RATE);
     }
 
-    // 1. 功能性测试：关键词是否能被正确识别
+    // 功能性测试：关键词是否能被正确识别
     @Test
     public void testKeywordRecognition() {
         log.info("执行 testKeywordRecognition 测试...");
@@ -39,7 +39,7 @@ public class KeywordCheckerTest {
         log.info("检查次数: {}, 误判次数: {}", checker.getTotalChecks(), checker.getFalsePositives());
     }
 
-    // 2. 功能性测试：非关键词是否能被正确识别
+    // 功能性测试：非关键词是否能被正确识别
     @Test
     public void testNonKeywordRecognition() {
         log.info("执行 testNonKeywordRecognition 测试...");
@@ -57,7 +57,7 @@ public class KeywordCheckerTest {
         log.info("理论误判率: {}", checker.getTheoreticalFalsePositiveRate());
     }
 
-    // 3. 大小写敏感性测试
+    // 大小写敏感性测试
     @Test
     public void testCaseInsensitive() {
         log.info("执行 testCaseInsensitive 测试...");
@@ -71,7 +71,7 @@ public class KeywordCheckerTest {
         assertTrue(resultWhileMixedCase);
     }
 
-    // 4. 测试C++特有关键字
+    // 测试C++特有关键字
     @Test
     public void testCppKeywords() {
         log.info("执行 testCppKeywords 测试...");
@@ -91,7 +91,7 @@ public class KeywordCheckerTest {
         assertFalse(resultClass);
     }
 
-    // 5. 边缘情况测试：空字符串、null等
+    // 边缘情况测试：空字符串、null等
     @Test
     public void testEdgeCases() {
         log.info("执行 testEdgeCases 测试...");
@@ -106,7 +106,7 @@ public class KeywordCheckerTest {
         log.info("边界情况测试完成");
     }
 
-    // 6. 性能测试：大规模查询
+    // 性能测试：大规模查询
     @Test
     public void testPerformance() {
         log.info("执行 testPerformance 测试...");
@@ -121,7 +121,7 @@ public class KeywordCheckerTest {
         assertTrue(duration < 1000); // 确保性能在合理范围内
     }
 
-    // 7. 统计功能测试：检查和重置
+    // 统计功能测试：检查和重置
     @Test
     public void testStatistics() {
         log.info("执行 testStatistics 测试...");

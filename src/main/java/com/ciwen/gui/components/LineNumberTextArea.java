@@ -8,11 +8,17 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import lombok.Getter;
 
 /**
  * 带行号的文本编辑器组件
  */
 public class LineNumberTextArea extends HBox {
+    /**
+     * -- GETTER --
+     *  获取文本编辑器组件
+     */
+    @Getter
     private final TextArea textArea;
     private final VBox lineNumbers;
     private final ScrollPane lineNumbersScroll;
@@ -25,18 +31,15 @@ public class LineNumberTextArea extends HBox {
 
         // 创建行号滚动面板
         lineNumbersScroll = new ScrollPane(lineNumbers);
-        lineNumbersScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        lineNumbersScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        lineNumbersScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);//禁用行号水平滚动
+        lineNumbersScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);//禁用行号垂直滚动
         lineNumbersScroll.setStyle("-fx-background-color: transparent;");
         lineNumbersScroll.setPrefWidth(40);
 
         // 创建文本编辑区
         textArea = new TextArea();
-        textArea.setWrapText(true);
-        HBox.setHgrow(textArea, Priority.ALWAYS);
-
-        // 设置行号样式
-        lineNumbers.setStyle("-fx-background-color: #eee; -fx-padding: 5 5 5 5;");
+        textArea.setWrapText(true); //设置自动换行
+        HBox.setHgrow(textArea, Priority.ALWAYS); //设置水平扩展优先级为 ALWAYS，允许文本编辑器占据多余空间
 
         // 监听文本变化，更新行号
         textArea.textProperty().addListener((obs, oldText, newText) -> updateLineNumbers());
@@ -65,13 +68,6 @@ public class LineNumberTextArea extends HBox {
             lineNum.setStyle("-fx-text-fill: #666; -fx-font-family: monospace;");
             lineNumbers.getChildren().add(lineNum);
         }
-    }
-
-    /**
-     * 获取文本编辑器组件
-     */
-    public TextArea getTextArea() {
-        return textArea;
     }
 
     /**

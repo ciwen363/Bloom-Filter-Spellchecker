@@ -40,7 +40,7 @@ public class SimpleBloomFilter<T> implements BloomFilter<T> {
     @Override
     public void add(@NotNull T item) {
         if (item == null) {
-            throw new IllegalArgumentException("Item cannot be null");
+            throw new IllegalArgumentException("Item 不能为空");
         }
 
         for (int i = 0; i < numHashFunctions; i++) {
