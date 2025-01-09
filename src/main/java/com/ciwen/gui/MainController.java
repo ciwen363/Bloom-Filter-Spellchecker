@@ -313,7 +313,7 @@ public class MainController implements Initializable {
         html.append("</div><div class='code-content'>");
 
         // 处理文本内容
-        Pattern wordPattern = Pattern.compile("\\b\\w+\\b");
+        Pattern wordPattern = Pattern.compile("\\b\\w+\\b|[\\p{script=Han}]+");
         Matcher matcher = wordPattern.matcher(text);
         int lastIndex = 0;
 
@@ -330,14 +330,11 @@ public class MainController implements Initializable {
                 html.append("<span class='keyword'>")
                         .append(escapeHtml(word))
                         .append("</span>");
-            } else if (!word.matches("\\d+") && !isCommonWord(word)) {
-                // 可能的错误单词高亮，非关键字且不是数字和常用词的情况
+            } else {
+                // 所有非关键字(包括数字和中文)都标记为错误
                 html.append("<span class='error'>")
                         .append(escapeHtml(word))
                         .append("</span>");
-            } else {
-                // 普通文本
-                html.append(escapeHtml(word));
             }
 
             lastIndex = matcher.end();
@@ -442,15 +439,6 @@ public class MainController implements Initializable {
                 checker.getKnownKeywords().size()
         );
         statusText.set(stats);
-    }
-
-    /**
-     * 检查是否为常用词
-     */
-    private boolean isCommonWord(String word) {
-        return word.length() <= 2 ||
-                word.matches("^[ijk]$") ||
-                word.matches("^(tmp|str|num|val|var|ptr)\\d*$");
     }
 
     /**
