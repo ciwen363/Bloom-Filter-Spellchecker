@@ -403,20 +403,53 @@ public class MainController implements Initializable {
     private void updateComboBoxItems() {
         // 保存当前选中值
         ThemeConfig.ThemeName currentTheme = themeComboBox.getValue();
+        StyleConfig.FontFamily currentFont = fontFamilyComboBox.getValue();
 
         // 更新主题下拉框
-        themeComboBox.getItems().clear();
-        for (ThemeConfig.ThemeName theme : ThemeConfig.ThemeName.values()) {
-            themeComboBox.getItems().add(theme);
-        }
-        themeComboBox.setValue(currentTheme);
+        themeComboBox.setButtonCell(new ListCell<ThemeConfig.ThemeName>() {
+            @Override
+            protected void updateItem(ThemeConfig.ThemeName item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.getDisplayName(isEnglish));
+                }
+            }
+        });
 
-        // 更新字体族名称
-        fontFamilyComboBox.getItems().clear();
-        for (StyleConfig.FontFamily family : StyleConfig.FontFamily.values()) {
-            fontFamilyComboBox.getItems().add(family);
-        }
-        fontFamilyComboBox.setValue(StyleConfig.FontFamily.COURIER_NEW);
+        themeComboBox.setCellFactory(lv -> new ListCell<ThemeConfig.ThemeName>() {
+            @Override
+            protected void updateItem(ThemeConfig.ThemeName item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.getDisplayName(isEnglish));
+                }
+            }
+        });
+
+        // 更新字体族下拉框
+        fontFamilyComboBox.setButtonCell(new ListCell<StyleConfig.FontFamily>() {
+            @Override
+            protected void updateItem(StyleConfig.FontFamily item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.getDisplayName(isEnglish));
+                }
+            }
+        });
+
+        fontFamilyComboBox.setCellFactory(lv -> new ListCell<StyleConfig.FontFamily>() {
+            @Override
+            protected void updateItem(StyleConfig.FontFamily item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item.getDisplayName(isEnglish));
+                }
+            }
+        });
+
+        // 恢复选中值
+        themeComboBox.setValue(currentTheme);
+        fontFamilyComboBox.setValue(currentFont);
     }
 
     /**

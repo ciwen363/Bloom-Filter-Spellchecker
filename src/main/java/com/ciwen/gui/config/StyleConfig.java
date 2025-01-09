@@ -22,19 +22,16 @@ public class StyleConfig {
         CONSOLAS("Consolas", "等线"),
         MONACO("Monaco", "黑体");
 
-        private final String englishName;
-        private final String chineseName;
+        @Getter private final String englishName;
+        @Getter private final String chineseName;
 
         FontFamily(String englishName, String chineseName) {
             this.englishName = englishName;
             this.chineseName = chineseName;
         }
 
-        @Override
-        public String toString() {
-            // 获取MainController的isEnglish值
-            boolean isEnglish = true; // 需要通过某种方式获取语言设置
-            return isEnglish ? englishName : chineseName;
+        public String getDisplayName(boolean isEnglish) {
+            return isEnglish ? this.englishName : this.chineseName;
         }
     }
 
@@ -44,7 +41,7 @@ public class StyleConfig {
      */
     public static StyleConfig createDefault() {
         StyleConfig config = new StyleConfig();
-        config.setFontFamily(FontFamily.COURIER_NEW.toString());
+        config.setFontFamily(FontFamily.COURIER_NEW.getEnglishName());
         config.setFontSize(14);
         config.setKeywordBold(true);
         config.setErrorBold(false);
