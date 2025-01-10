@@ -120,5 +120,4 @@ MA --> CSS : 使用\nuses
 
 ' GUI层与核心功能层的连接
 TP --> KC : 使用\nuses
-
 @enduml

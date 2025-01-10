@@ -3,38 +3,31 @@
 skinparam backgroundColor white
 scale max 800 width
 scale max 1100 height
+scale 1.0
 
-|初始化\nInitialization|
 start
 :计算最优大小\nCalculate Optimal Size;
 :计算最优哈希函数数量\nCalculate Optimal Hash Functions;
 :创建位数组\nCreate Bit Array;
 :初始化哈希函数\nInitialize Hash Functions;
 
-|核心操作\nCore Operations|
-fork
-    |添加元素\nAdd Element|
-    :获取元素字符串\nGet Element String;
-    :计算多个哈希值\nCalculate Hash Values;
-    :设置位数组对应位\nSet Bits;
-    :更新元素计数\nUpdate Count;
+:获取元素字符串\nGet Element String;
+:计算多个哈希值\nCalculate Hash Values;
+:设置位数组对应位\nSet Bits;
+:更新元素计数\nUpdate Count;
 
-fork again
-    |查询元素\nQuery Element|
-    :获取元素字符串\nGet Element String;
-    :计算多个哈希值\nCalculate Hash Values;
-    :检查位数组对应位\nCheck Bits;
-    if (所有位都为1?\nAll Bits Set?) then (是\nYes)
-        :返回可能存在\nMight Exist;
-    else (否\nNo)
-        :返回一定不存在\nDefinitely Not Exist;
-    endif
+:获取元素字符串\nGet Element String;
+:计算多个哈希值\nCalculate Hash Values;
+:检查位数组对应位\nCheck Bits;
 
-fork again
-    |清空操作\nClear Operation|
-    :重置位数组\nReset Bit Array;
-    :重置计数器\nReset Counter;
-end fork
+if (所有位都为1?\nAll Bits Set?) then (是\nYes)
+    :返回可能存在\nMight Exist;
+else (否\nNo)
+    :返回一定不存在\nDefinitely Not Exist;
+endif
+
+:重置位数组\nReset Bit Array;
+:重置计数器\nReset Counter;
 
 stop
 

@@ -7,26 +7,22 @@ skinparam activity {
     FontColor black
 }
 
-|系统启动\nSystem Startup|
 start
 :加载配置文件\nLoad Configuration;
 :读取主题设置\nLoad Theme Settings;
 :读取语言设置\nLoad Language Settings;
 :读取字体设置\nLoad Font Settings;
 
-|布隆过滤器初始化\nBloom Filter Init|
 :计算最优大小\nCalculate Optimal Size;
 :初始化位数组\nInit Bit Array;
 :配置哈希函数\nSetup Hash Functions;
 :设置误判率\nSet False Positive Rate;
 
-|关键字管理初始化\nKeyword Management Init|
 :初始化关键字加载器\nInit Keyword Loader;
 :加载C关键字\nLoad C Keywords;
 :加载C++关键字\nLoad C++ Keywords;
 :初始化关键字检查器\nInit Keyword Checker;
 
-|界面初始化\nGUI Initialization|
 :加载FXML布局\nLoad FXML;
 :初始化主控制器\nInit Main Controller;
 :创建行号文本区\nCreate Line Number Text Area;
@@ -36,10 +32,8 @@ start
 :应用主题样式\nApply Theme;
 :应用字体设置\nApply Font Settings;
 
-|主程序循环\nMain Loop|
 while (程序运行中?\nIs Running?) is (是\nYes)
     fork
-        |文本编辑处理\nText Editing|
         :监听文本变化\nMonitor Text Changes;
         :获取变更内容\nGet Changes;
         :文本分词处理\nTokenize Text;
@@ -57,7 +51,6 @@ while (程序运行中?\nIs Running?) is (是\nYes)
         :更新行号显示\nUpdate Line Numbers;
 
     fork again
-        |配置处理\nConfiguration|
         if (主题切换?\nTheme Switch?) then (是\nYes)
             :切换主题\nSwitch Theme;
             :更新界面样式\nUpdate UI Style;
@@ -77,7 +70,6 @@ while (程序运行中?\nIs Running?) is (是\nYes)
         endif
 
     fork again
-        |统计处理\nStatistics|
         :更新总检查次数\nUpdate Total Checks;
         :更新关键字命中数\nUpdate Keyword Hits;
         :更新误判次数\nUpdate False Positives;
@@ -87,13 +79,13 @@ while (程序运行中?\nIs Running?) is (是\nYes)
     end fork
 endwhile (否\nNo)
 
-|结束处理\nFinalization|
 :保存当前配置\nSave Current Config;
 :保存主题设置\nSave Theme Settings;
 :保存语言设置\nSave Language Settings;
 :保存字体设置\nSave Font Settings;
 :保存窗口状态\nSave Window State;
 :清理资源\nCleanup Resources;
+
 stop
 
 @enduml
