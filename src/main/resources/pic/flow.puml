@@ -1,11 +1,17 @@
 @startuml 完整系统流程图
-
 skinparam backgroundColor white
 skinparam activity {
     BackgroundColor LightGreen
     BorderColor Green
     FontColor black
 }
+
+skinparam nodeMargin 2
+skinparam activityMargin 2
+skinparam leftMargin 5
+skinparam rightMargin 5
+skinparam topMargin 5
+skinparam bottomMargin 5
 
 start
 :加载配置文件\nLoad Configuration;
